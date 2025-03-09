@@ -12,9 +12,11 @@ export const Checkbox = <T extends Record<string, unknown>>({ label, name }: IPr
   } = useFormContext<T>();
 
   return (
-    <div className='flex items-center'>
-      <input {...register(name as Path<T>)} type='checkbox' className='mr-2' />
-      <label>{label}</label>
+    <div className='grid items-center'>
+      <div>
+        <input {...register(name as Path<T>)} type='checkbox' className='mr-2' />
+        <label>{label}</label>
+      </div>
       {errors[name as string] && <p className='text-red-500 text-sm'>{String(errors[name as string]?.message)}</p>}
     </div>
   );

@@ -13,6 +13,15 @@ const schema = yup.object({
   name: yup.string().required('El nombre es obligatorio'),
   email: yup.string().email('Correo inválido').required('El correo es obligatorio'),
   country: yup.string().required('Selecciona un país'),
+  addresses: yup
+    .array()
+    .of(
+      yup.object().shape({
+        street: yup.string().required('La calle es obligatoria'),
+        city: yup.string().required('La ciudad es obligatoria'),
+      })
+    )
+    .min(1, 'Debes agregar al menos una dirección'),
   acceptTerms: yup.boolean().oneOf([true], 'Debes aceptar los términos'),
   darkMode: yup.boolean(),
 });
@@ -21,37 +30,45 @@ export type IFormData = yup.InferType<typeof schema>;
 type IFormMode = 'onSubmit' | 'onBlur' | 'onChange' | 'all';
 
 const App = () => {
-  const [mode] = React.useState<IFormMode>('onChange');
+  const [mode] = React.useState<IFormMode>('onSubmit');
   const [submittedData, setSubmittedData] = React.useState<IFormData | null>(null);
   const [disabled, setDisabled] = React.useState(false);
 
   const methods = useForm<IFormData>({
     mode: mode,
+    shouldFocusError: true,
+    // delayError: 5000,
     resolver: yupResolver(schema),
     disabled,
-    defaultValues: async () => {
-      try {
-        setDisabled(true);
-        const response = await new Promise<IFormData>((resolve) =>
-          setTimeout(
-            () =>
-              resolve({
-                name: 'Juan Pérez',
-                email: 'juan@example.com',
-                country: 'mx',
-                acceptTerms: true,
-                darkMode: false,
-              }),
-            2000
-          )
-        );
-        setDisabled(false);
-        return response;
-      } catch (error) {
-        toast.error('Error al cargar los datos');
-        throw error;
-      }
+    defaultValues: {
+      name: '',
+      email: '',
+      country: '',
+      addresses: [{ street: '', city: '' }],
     },
+    // defaultValues: async () => {
+    //   try {
+    //     setDisabled(true);
+    //     const response = await new Promise<IFormData>((resolve) =>
+    //       setTimeout(
+    //         () =>
+    //           resolve({
+    //             name: 'Juan Pérez',
+    //             email: 'juan@example.com',
+    //             country: 'mx',
+    //             acceptTerms: true,
+    //             darkMode: false,
+    //           }),
+    //         2000
+    //       )
+    //     );
+    //     setDisabled(false);
+    //     return response;
+    //   } catch (error) {
+    //     toast.error('Error al cargar los datos');
+    //     throw error;
+    //   }
+    // },
   });
 
   const onSubmit: SubmitHandler<IFormData> = async () => {
