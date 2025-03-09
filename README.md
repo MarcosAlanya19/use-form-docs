@@ -1,54 +1,79 @@
-# useFormDocs
+# Formulario Accesible con React Hook Form y Yup
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto implementa un formulario accesible en React utilizando `react-hook-form` y `yup` para la validación.
 
-Currently, two official plugins are available:
+## Características
+- Validación con `yup`.
+- Manejo de estado del formulario con `react-hook-form`.
+- Modos de validación: `onSubmit`, `onBlur`, `onChange`, `all`.
+- Carga de valores predeterminados de manera asíncrona.
+- Feedback de validación y mensajes de error.
+- Visualización del estado y datos del formulario en tiempo real.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Instalación
 
-## Expanding the ESLint configuration
+Para instalar las dependencias del proyecto, ejecuta:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```sh
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Uso
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Ejecuta el proyecto con:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```sh
+npm start
 ```
+
+## Estructura del Proyecto
+
+```
+📦 src
+ ┣ 📂 components
+ ┃ ┣ 📜 Checkbox.tsx
+ ┃ ┣ 📜 DataDisplay.tsx
+ ┃ ┣ 📜 Form.tsx
+ ┃ ┣ 📜 FormStateDisplay.tsx
+ ┃ ┣ 📜 Input.tsx
+ ┃ ┗ 📜 Select.tsx
+ ┣ 📜 App.tsx
+ ┗ 📜 main.tsx
+```
+
+## Componentes Principales
+
+### `App.tsx`
+- Define el esquema de validación con `yup`.
+- Configura `react-hook-form`.
+- Muestra el formulario y los estados en tiempo real.
+
+### `Form.tsx`
+- Renderiza los campos del formulario e integra los componentes de entrada.
+
+### `Input.tsx`, `Select.tsx`, `Checkbox.tsx`
+- Componentes reutilizables con integración en `react-hook-form`.
+
+### `DataDisplay.tsx`
+- Muestra datos en tiempo real en un formato JSON.
+
+### `FormStateDisplay.tsx`
+- Muestra el estado del formulario en tiempo real.
+
+## Validación con Yup
+
+El esquema de validación se define en `App.tsx`:
+
+```ts
+const schema = yup.object({
+  name: yup.string().required('El nombre es obligatorio'),
+  email: yup.string().email('Correo inválido').required('El correo es obligatorio'),
+  country: yup.string().required('Selecciona un país'),
+  acceptTerms: yup.boolean().oneOf([true], 'Debes aceptar los términos'),
+  darkMode: yup.boolean(),
+});
+```
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT.
